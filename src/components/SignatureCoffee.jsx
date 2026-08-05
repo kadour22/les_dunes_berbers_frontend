@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { menu } from '../data/menu'
+import { Link } from 'react-router-dom'
 
 const container = {
   hidden: {},
@@ -77,6 +78,14 @@ export default function SignatureCoffee() {
             </motion.article>
           ))}
         </motion.div>
+        <div className="mt-14 text-center">
+  <Link
+    to="/menu"
+    className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-gold text-coffee font-semibold text-sm uppercase tracking-wide shadow-soft hover:scale-105 transition-transform"
+  >
+    Voir tout le menu
+  </Link>
+</div>
       </div>
     </section>
   )
