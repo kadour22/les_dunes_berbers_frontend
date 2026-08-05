@@ -1,85 +1,108 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Menu, X } from 'lucide-react'
-import { useScrollPosition } from '../hooks/useScrollPosition'
-import { navLinks } from '../data/features'
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag, Menu, X } from "lucide-react";
+import { useScrollPosition } from "../hooks/useScrollPosition";
+
+const navLinks = [
+  { label: "Accueil", path: "/" },
+  { label: "Menu", path: "/menu" },
+  { label: "Réservation", path: "/reservation" },
+];
 
 export default function Navbar() {
-  const scrolled = useScrollPosition(40)
-  const [open, setOpen] = useState(false)
+  const scrolled = useScrollPosition(40);
+  const [open, setOpen] = useState(false);
 
   return (
     <motion.header
-      initial={{ y: -80, opacity: 0 }}
+      initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'glass shadow-soft py-3' : 'bg-transparent py-6'
+      transition={{ duration: 0.5 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md py-3"
+          : "bg-transparent py-5"
       }`}
     >
-      <nav
-        aria-label="Primary"
-        className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between"
-      >
-        <a
-          href="#home"
-          className="font-heading text-2xl md:text-3xl tracking-wide text-coffee flex items-center gap-2"
-        >
-          <span className="text-gradient-gold font-semibold">Les Dunes</span>
-          <span className="text-coffee/80 italic">Berbères</span>
-        </a>
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <NavLink
+  to="/"
+  className="font-heading text-2xl md:text-3xl tracking-wide text-coffee flex items-center gap-2"
+>
+  <span className="text-gradient-gold font-semibold">
+    Les Dunes
+  </span>
 
-        <ul className="hidden lg:flex items-center gap-9 font-body text-sm tracking-wide uppercase text-coffee/80">
+  <span className="text-coffee/80 italic">
+    Berbères
+  </span>
+</NavLink>
+
+        {/* Desktop */}
+        <ul className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="relative py-1 transition-colors hover:text-brown group"
+            <li key={link.path}>
+              <NavLink
+                to={link.path}
+                className={({ isActive }) =>
+                  `transition font-medium ${
+                    isActive
+                      ? "text-yellow-600"
+                      : "text-stone-700 hover:text-yellow-600"
+                  }`
+                }
               >
                 {link.label}
-                <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
 
-        <div className="flex items-center gap-4">
-          {/* <button
-            aria-label="Voir le panier"
-            className="relative p-2.5 rounded-full hover:bg-coffee/5 transition-colors"
-          >
-            <ShoppingBag className="w-5 h-5 text-coffee" strokeWidth={1.75} />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-gradient-gold text-[10px] flex items-center justify-center text-background font-semibold">
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
+          <button className="relative p-2 rounded-full hover:bg-gray-100">
+            <ShoppingBag size={22} />
+            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center">
               2
             </span>
-          </button> */}
+          </button>
 
           <button
-            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="lg:hidden p-2.5 rounded-full hover:bg-coffee/5 transition-colors"
+            onClick={() => setOpen(!open)}
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
           >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-      </nav>
+      </div>
 
+      {/* Mobile */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="lg:hidden overflow-hidden glass"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white shadow-md"
           >
-            <ul className="flex flex-col items-center gap-6 py-8 font-body uppercase text-sm tracking-wide text-coffee/80">
+            <ul className="flex flex-col py-5">
               {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} onClick={() => setOpen(false)}>
+                <li key={link.path}>
+                  <NavLink
+                    to={link.path}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-6 py-3 ${
+                        isActive
+                          ? "text-yellow-600 font-semibold"
+                          : "text-stone-700"
+                      }`
+                    }
+                  >
                     {link.label}
-                  </a>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -87,5 +110,5 @@ export default function Navbar() {
         )}
       </AnimatePresence>
     </motion.header>
-  )
+  );
 }

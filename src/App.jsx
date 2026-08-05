@@ -11,11 +11,12 @@ import Landing from './components/Landing'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Reservation from './components/Reservation'
 import MenuList from './components/MenuList'
+
 export default function App() {
   return (
     <div className="min-h-screen bg-background overflow-hidden">
-      <Navbar />
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/reservation" element={<Reservation />} />

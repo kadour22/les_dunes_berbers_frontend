@@ -30,7 +30,7 @@ export default function CTA() {
           Entrez dans un espace où chaque détail — la lumière, le parfum, le silence entre deux
           gorgées — a été pensé pour vous inviter à ralentir.
         </p>
-        <motion.a
+        <motion.div
           href="#contact"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.97 }}
@@ -39,7 +39,7 @@ export default function CTA() {
 
           <CalendarCheck className="w-4 h-4" />
           <Link to="/reservation">Réserver une table</Link>
-        </motion.a>
+        </motion.div>
       </motion.div>
     </section>
   )
