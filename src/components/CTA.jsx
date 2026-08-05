@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { CalendarCheck } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function CTA() {
   return (
@@ -36,7 +37,7 @@ export default function CTA() {
           className="mt-10 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-gold text-coffee font-semibold text-sm tracking-wide shadow-glow"
         >
           <CalendarCheck className="w-4 h-4" />
-          Réservez Votre Table
+          <Link to="/reservation">Réserver une table</Link>
         </motion.a>
       </motion.div>
     </section>

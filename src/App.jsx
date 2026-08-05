@@ -7,21 +7,19 @@ import Gallery from './components/Gallery'
 import Testimonials from './components/Testimonials'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
-
+import Landing from './components/Landing'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Reservation from './components/Reservation'
 export default function App() {
   return (
     <div className="min-h-screen bg-background overflow-hidden">
       <Navbar />
-      <main>
-        <Hero />
-        <OurStory />
-        <SignatureCoffee />
-        <WhyChooseUs />
-        <Gallery />
-        <Testimonials />
-        <CTA />
-      </main>
-      <Footer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/reservation" element={<Reservation />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }

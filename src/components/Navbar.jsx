@@ -44,7 +44,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-4">
-          <button
+          {/* <button
             aria-label="Voir le panier"
             className="relative p-2.5 rounded-full hover:bg-coffee/5 transition-colors"
           >
@@ -52,7 +52,7 @@ export default function Navbar() {
             <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-gradient-gold text-[10px] flex items-center justify-center text-background font-semibold">
               2
             </span>
-          </button>
+          </button> */}
 
           <button
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
