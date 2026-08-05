@@ -28,7 +28,7 @@ export const features = [
 export const navLinks = [
   { label: 'Accueil', href: '#home' },
   { label: 'Histoire', href: '#story' },
-  { label: 'Menu', href: '#menu' },
+  { label: 'Menu', href: '/menu' },
   { label: 'Galerie', href: '#gallery' },
   { label: 'Avis', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },

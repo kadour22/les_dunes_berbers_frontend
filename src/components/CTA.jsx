@@ -36,6 +36,7 @@ export default function CTA() {
           whileTap={{ scale: 0.97 }}
           className="mt-10 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-gold text-coffee font-semibold text-sm tracking-wide shadow-glow"
         >
+
           <CalendarCheck className="w-4 h-4" />
           <Link to="/reservation">Réserver une table</Link>
         </motion.a>
