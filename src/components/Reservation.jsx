@@ -1,14 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { User, Phone, Calendar, Clock, Users, Send, CheckCircle2 } from 'lucide-react'
+import axios from 'axios'
 
-const initialForm = {
-  name: '',
-  phone_number: '',
-  date: '',
-  time: '',
-  number_of_guests: '',
-}
 
 const fields = [
   {
@@ -40,54 +34,111 @@ const fields = [
     icon: Clock,
   },
 ]
+const initialForm = {
+  name: "",
+  phone_number: "",
+  date: "",
+  time: "",
+  number_of_guests: "",
+};
 
 export default function Reservation() {
-  const [form, setForm] = useState(initialForm)
-  const [errors, setErrors] = useState({})
-  const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (id) => (e) => {
-    setForm((prev) => ({ ...prev, [id]: e.target.value }))
-    setErrors((prev) => ({ ...prev, [id]: undefined }))
-  }
+    setForm((prev) => ({
+      ...prev,
+      [id]: e.target.value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [id]: undefined,
+    }));
+  };
 
   const validate = () => {
-    const next = {}
-    if (!form.name.trim()) next.name = 'Veuillez indiquer votre nom.'
+    const next = {};
+
+    if (!form.name.trim()) {
+      next.name = "Veuillez indiquer votre nom.";
+    }
+
     if (!form.phone_number.trim()) {
-      next.phone_number = 'Veuillez indiquer votre numéro de téléphone.'
+      next.phone_number = "Veuillez indiquer votre numéro de téléphone.";
     } else if (!/^[\d\s+()-]{6,}$/.test(form.phone_number.trim())) {
-      next.phone_number = 'Numéro de téléphone invalide.'
+      next.phone_number = "Numéro de téléphone invalide.";
     }
-    if (!form.date) next.date = 'Veuillez choisir une date.'
-    if (!form.time) next.time = 'Veuillez choisir une heure.'
+
+    if (!form.date) {
+      next.date = "Veuillez choisir une date.";
+    }
+
+    if (!form.time) {
+      next.time = "Veuillez choisir une heure.";
+    }
+
     if (!form.number_of_guests) {
-      next.number_of_guests = 'Veuillez indiquer le nombre de convives.'
+      next.number_of_guests = "Veuillez indiquer le nombre de convives.";
     } else if (Number(form.number_of_guests) < 1) {
-      next.number_of_guests = 'Au moins 1 convive est requis.'
+      next.number_of_guests = "Au moins 1 convive est requis.";
     }
-    return next
-  }
+
+    return next;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const validation = validate()
-    setErrors(validation)
-    if (Object.keys(validation).length > 0) return
+  e.preventDefault();
 
-    setSubmitting(true)
-    // Simulate a network request — replace with a real API call when ready.
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    setSubmitting(false)
-    setSubmitted(true)
+  const validation = validate();
+  setErrors(validation);
+
+  if (Object.keys(validation).length > 0) return;
+
+  try {
+    setSubmitting(true);
+
+    const reservationData = {
+      name: form.name,
+      phone_number: form.phone_number,
+      date: form.date, // YYYY-MM-DD
+      time: form.time, // HH:MM
+      number_of_guests: Number(form.number_of_guests),
+    };
+
+    console.log("Sending:", reservationData);
+
+    await axios.post(
+      "https://les-dunes-berbers.onrender.com/reservations/reservations/create/",
+      reservationData
+    );
+
+    setSubmitted(true);
+
+  } catch (error) {
+    console.error("Reservation error:", error.response?.data);
+
+    if (error.response?.data) {
+      setErrors(error.response.data);
+    } else {
+      setErrors({
+        general: "Une erreur est survenue. Veuillez réessayer.",
+      });
+    }
+
+  } finally {
+    setSubmitting(false);
   }
-
+};
   const handleReset = () => {
-    setForm(initialForm)
-    setErrors({})
-    setSubmitted(false)
-  }
+    setForm(initialForm);
+    setErrors({});
+    setSubmitted(false);
+  };
+
 
   return (
     <section

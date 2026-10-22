@@ -24,3 +24,4 @@ export const testimonials = [
     avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
   },
 ]
+

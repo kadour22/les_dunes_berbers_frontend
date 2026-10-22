@@ -62,12 +62,12 @@ export default function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          <button className="relative p-2 rounded-full hover:bg-gray-100">
+          {/* <button className="relative p-2 rounded-full hover:bg-gray-100">
             <ShoppingBag size={22} />
             <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center">
               2
             </span>
-          </button>
+          </button> */}
 
           <button
             onClick={() => setOpen(!open)}
