@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BASE_URL = "https://les-dunes-berbers.onrender.com/menu";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const MenuList = () => {
   const [categories, setCategories] = useState([]);
@@ -13,7 +13,7 @@ const MenuList = () => {
   // Fetch Categories
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/categories/`)
+      .get(`${BASE_URL}/menu/categories/`)
       .then((res) => setCategories(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -27,14 +27,14 @@ const MenuList = () => {
     setLoading(true);
 
     try {
-      let url = `${BASE_URL}/menu/`;
-
+      let url = `${BASE_URL}/menu/menu/`;
       if (categoryId) {
         url = `${BASE_URL}/menu/category/${categoryId}/`;
       }
-
+      
       const res = await axios.get(url);
       setMenuItems(res.data);
+      console.log(res.data)
     } catch (err) {
       console.log(err);
     } finally {
@@ -103,11 +103,15 @@ const MenuList = () => {
                   whileHover={{ y: -6 }}
                   className="bg-white rounded-3xl overflow-hidden shadow-lg"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="h-60 w-full object-cover"
-                  />
+                 
+                <img
+                  src={`${BASE_URL}${item.image}`}
+                  alt={item.name}
+                  className="w-full h-64 object-cover"
+                  onError={(e) => {
+                    console.log("Image failed:", e.currentTarget.src);
+                  }}
+                />  
 
                   <div className="p-6">
 
