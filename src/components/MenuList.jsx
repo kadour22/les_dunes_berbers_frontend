@@ -42,6 +42,7 @@ const MenuList = () => {
     }
   };
 
+  
   return (
     <section className="py-20 bg-[#f8f5ef] min-h-screen">
       <div className="max-w-7xl mx-auto px-5">
