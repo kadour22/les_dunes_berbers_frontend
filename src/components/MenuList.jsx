@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "https://les-dunes-berbers.onrender.com";
 
 const MenuList = () => {
   const [categories, setCategories] = useState([]);
@@ -42,7 +42,7 @@ const MenuList = () => {
     }
   };
 
-  
+
   return (
     <section className="py-20 bg-[#f8f5ef] min-h-screen">
       <div className="max-w-7xl mx-auto px-5">
