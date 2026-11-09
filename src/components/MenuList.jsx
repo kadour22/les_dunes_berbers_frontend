@@ -29,7 +29,7 @@ const MenuList = () => {
     try {
       let url = `${BASE_URL}/menu/menu/`;
       if (categoryId) {
-        url = `${BASE_URL}/menu/category/${categoryId}/`;
+        url = `${BASE_URL}/menu/categories/${categoryId}/`;
       }
       
       const res = await axios.get(url);
