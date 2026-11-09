@@ -112,7 +112,7 @@ export default function Reservation() {
     console.log("Sending:", reservationData);
 
     await axios.post(
-      "https://les-dunes-berbers.onrender.com/reservations/reservations/create/",
+       "http://13.140.221.228:9000/reservations/reservations/create/",
       reservationData
     );
 

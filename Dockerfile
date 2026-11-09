@@ -1,3 +1,4 @@
+
 # Stage 1: Build the React application
 FROM node:20-alpine AS builder
 
@@ -11,6 +12,10 @@ RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Accept backend API URL as a build argument
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build the app for production
 RUN npm run build
@@ -29,3 +34,4 @@ EXPOSE 80
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "https://les-dunes-berbers.onrender.com";
+const BASE_URL = "http://13.140.221.228:9000";
 
 const MenuList = () => {
   const [categories, setCategories] = useState([]);

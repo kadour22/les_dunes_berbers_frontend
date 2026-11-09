@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://13.140.221.228:9000";
 
 const Login = () => {
 
