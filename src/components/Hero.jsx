@@ -1,158 +1,229 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { ArrowRight, BookOpen } from 'lucide-react'
-import SandParticles from './SandParticles'
 
-export default function Hero() {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  })
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '60%'])
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-
+import { motion } from "framer-motion";
+import {
+  ArrowDown,
+  ArrowRight,
+  MapPin,
+  Utensils,
+  Instagram,
+} from "lucide-react";
+import heroImage from "../assets/hero.jpg";
+import logo from "../assets/logo.png";
+import familie from "../assets/espace-familie.jpg";
+import coffeshop from "../assets/coffeshop.jpg";
+const Hero = () => {
   return (
-    <section
-      id="home"
-      ref={ref}
-      className="relative h-screen min-h-[640px] w-full overflow-hidden flex items-center justify-center"
-    >
-      {/* Parallax background */}
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute inset-0 scale-110"
-      >
+    <section className="relative min-h-screen overflow-hidden bg-[#17140f] text-white">
+
+      {/* Background */}
+      <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=2000&auto=format&fit=crop"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover"
+          src={heroImage}
+          alt="Les Dunes Berbère exterior"
+          className="h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-hero-overlay" />
-      </motion.div>
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#17140f] via-transparent to-black/30" />
+      </div>
 
-      {/* Amazigh symbol watermark */}
-      <span
-        aria-hidden="true"
-        className="absolute -right-10 top-1/4 text-[24rem] leading-none font-heading text-background/5 select-none pointer-events-none"
-      >
-        ⵣ
-      </span>
-
-      <SandParticles />
+      {/* Decorative glow */}
+      <div className="absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-amber-600/10 blur-[120px]" />
 
       {/* Content */}
-      <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 max-w-4xl mx-auto px-6 text-center flex flex-col items-center"
-      >
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="uppercase tracking-[0.35em] text-gold text-xs md:text-sm font-body mb-6"
-        >
-          Fondé au cœur du Sahara
-        </motion.span>
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-6">
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+        {/* Navbar */}
+        <motion.nav
+          initial={{ opacity: 0, y: -25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.35 }}
-          className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-background leading-[1.05] tracking-wide"
+          transition={{ duration: 0.8 }}
+          className="flex items-center justify-between border-b border-white/15 py-6"
         >
-          Les Dunes Berbères
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55 }}
-          className="mt-5 font-heading italic text-xl md:text-2xl text-gold"
-        >
-          Un café inspiré du Sahara
-        </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-6 max-w-xl mx-auto text-background/80 font-body text-sm md:text-base leading-relaxed"
-        >
-          Ancrée dans des siècles d’hospitalité amazighe, chaque tasse que nous servons
-          porte la chaleur du désert, la générosité de son peuple et le rituel de se retrouver
-          autour de l’essentiel.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="mt-10 flex flex-col sm:flex-row items-center gap-4"
-        >
-          <a
-            href="#menu"
-            className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-gold text-coffee font-semibold text-sm tracking-wide shadow-glow overflow-hidden transition-transform hover:scale-105"
-          >
-            <span className="relative z-10">Découvrir le Menu</span>
-            <ArrowRight className="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-1" />
+          <a href="/" className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="Les Dunes Berbère"
+              className="h-14 w-14 rounded-full object-cover"
+            />
+            <div>
+              <h2 className="font-serif text-lg tracking-wide">
+                LES DUNES
+              </h2>
+              <p className="text-[10px] tracking-[0.35em] text-amber-400">
+                BERBÈRE
+              </p>
+            </div>
           </a>
+
+          <div className="hidden items-center gap-9 text-sm text-white/80 md:flex">
+            <a href="/" className="transition hover:text-amber-400">Accueil</a>
+            <a href="/menu" className="transition hover:text-amber-400">Notre menu</a>
+            <a href="#experience" className="transition hover:text-amber-400">Expérience</a>
+            <a href="#contact" className="transition hover:text-amber-400">Contact</a>
+          </div>
+
           <a
-            href="#story"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-background/40 text-background font-semibold text-sm tracking-wide backdrop-blur-sm transition-all hover:bg-background/10"
+            href="/reservation"
+            className="hidden items-center gap-2 rounded-full border border-amber-400/70 px-6 py-3 text-sm font-medium text-amber-300 transition hover:bg-amber-400 hover:text-black sm:flex"
           >
-            <BookOpen className="w-4 h-4" />
-            Notre Histoire
+            Réserver une table
+            <ArrowRight size={16} />
           </a>
-        </motion.div>
-      </motion.div>
+        </motion.nav>
 
-      {/* Floating coffee cup */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 1.1 }}
-        className="hidden lg:block absolute right-10 bottom-10 z-10 animate-float"
-      >
-        <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-card border-4 border-background/20">
-          <img
-            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=600&auto=format&fit=crop"
-            alt="Tasse de café signature avec latte art"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        {/* Steam */}
-        <div aria-hidden="true" className="absolute -top-6 left-1/2 -translate-x-1/2 flex gap-2">
-          <span className="w-2 h-10 rounded-full bg-background/40 blur-sm animate-steam" />
-          <span
-            className="w-2 h-10 rounded-full bg-background/40 blur-sm animate-steam"
-            style={{ animationDelay: '1.3s' }}
-          />
-          <span
-            className="w-2 h-10 rounded-full bg-background/40 blur-sm animate-steam"
-            style={{ animationDelay: '2.6s' }}
-          />
-        </div>
-      </motion.div>
+        {/* Hero body */}
+        <div className="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr]">
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-      >
-        <div className="w-6 h-10 rounded-full border-2 border-background/50 flex justify-center pt-2">
-          <motion.span
-            className="w-1 h-2 rounded-full bg-gold"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          {/* Left content */}
+          <div className="max-w-2xl">
+
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="mb-7 flex items-center gap-3"
+            >
+              <span className="h-px w-12 bg-amber-400" />
+              <span className="text-xs uppercase tracking-[0.3em] text-amber-300">
+                Authentic Desert Experience
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="font-serif text-5xl leading-[1.15] sm:text-6xl lg:text-7xl xl:text-8xl"
+            >
+              L'Art de vivre
+              <br />
+              <span className="italic text-amber-400">
+                autrement.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-7 max-w-lg text-base leading-8 text-white/75 sm:text-lg"
+            >
+              Bienvenue aux Dunes Berbère, un lieu où authenticité,
+              convivialité et élégance se rencontrent pour vous
+              offrir une expérience unique.
+            </motion.p>
+
+            {/* Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-10 flex flex-wrap items-center gap-4"
+            >
+              <a
+                href="/menu"
+                className="group flex items-center gap-3 rounded-full bg-amber-500 px-8 py-4 font-semibold text-black transition hover:bg-amber-400"
+              >
+                Découvrir notre menu
+                <ArrowRight
+                  size={18}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </a>
+
+              <a
+                href="/reservation"
+                className="rounded-full border border-white/40 px-8 py-4 text-sm transition hover:border-amber-400 hover:text-amber-300"
+              >
+                Réserver maintenant
+              </a>
+            </motion.div>
+
+            {/* Location */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="mt-12 flex items-center gap-3 text-sm text-white/60"
+            >
+              <MapPin size={17} className="text-amber-400" />
+              <span>Un cadre exceptionnel, une expérience authentique.</span>
+            </motion.div>
+          </div>
+
+          {/* Right image composition */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="relative mx-auto hidden h-[490px] w-full max-w-[480px] lg:block"
+          >
+            {/* Main image */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute right-0 top-0 h-[370px] w-[78%] overflow-hidden rounded-t-full rounded-b-[120px] border border-white/20 shadow-2xl"
+            >
+              <img
+                src={coffeshop}
+                alt="Elegant coffee lounge"
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+            </motion.div>
+
+            {/* Secondary image */}
+            <div className="absolute bottom-0 left-0 h-56 w-64 overflow-hidden rounded-2xl border-4 border-[#17140f] shadow-2xl">
+              <img
+                src={familie}
+                alt="Family lounge"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* Floating badge */}
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute bottom-16 right-0 flex h-28 w-28 flex-col items-center justify-center rounded-full border border-amber-400/50 bg-[#21190f]/90 text-center shadow-xl backdrop-blur-md"
+            >
+              <Utensils size={21} className="mb-2 text-amber-400" />
+              <span className="text-xs font-semibold tracking-widest">
+                CAFÉ
+              </span>
+              <span className="text-[10px] text-amber-300">
+                LOUNGE
+              </span>
+            </motion.div>
+          </motion.div>
         </div>
-      </motion.div>
+
+        {/* Bottom section */}
+        <div className="flex items-center justify-between border-t border-white/15 py-6">
+          <div className="hidden items-center gap-3 text-xs tracking-widest text-white/50 sm:flex">
+            <span className="h-px w-8 bg-amber-400" />
+            UN LIEU, MILLE ÉMOTIONS
+          </div>
+
+          <a
+            href="#experience"
+            className="mx-auto flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60 transition hover:text-amber-400 sm:mx-0"
+          >
+            Explorez notre univers
+            <ArrowDown size={15} className="animate-bounce" />
+          </a>
+
+          <a
+            href="#contact"
+            className="hidden text-white/60 transition hover:text-amber-400 sm:block"
+          >
+            <Instagram size={20} />
+          </a>
+        </div>
+      </div>
     </section>
-  )
-}
+  );
+};
+
+export default Hero;

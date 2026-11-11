@@ -1,23 +1,15 @@
 import React from 'react'
 import Hero from './Hero'
-import OurStory from './OurStory'
-import SigmatureCoffee from './SignatureCoffee'
-import WhyChooseUs from './WhyChooseUs'
-import Gallery from './Gallery'
-import Testimonials from './Testimonials'
-import CTA from './CTA'
-import Footer from './Footer'
+import LocationSection from './LocationSection'
+import ContactSection from './ContactSection'
+import AboutSection from './AboutSection'
 const Landing = () => {
   return (
     <>
       <Hero />
-      <OurStory />
-      <SigmatureCoffee />
-      <WhyChooseUs />
-      <Gallery />
-      <Testimonials />
-      <CTA />
-      <Footer />
+      <AboutSection />
+      <LocationSection />
+      <ContactSection />
     </>
   )
 }
