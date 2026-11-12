@@ -147,32 +147,75 @@ const MenuList = () => {
         </motion.div>
 
         {/* Categories */}
-        <div className="mb-12 flex flex-wrap justify-center gap-3">
-          <button
-            onClick={() => handleCategoryChange(null)}
-            className={`rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
-              selectedCategory === null
-                ? "border-amber-500 bg-amber-500 text-[#17140f]"
-                : "border-stone-700 bg-[#211d17] text-stone-300 hover:border-amber-500 hover:text-amber-500"
-            }`}
-          >
-            Tous
-          </button>
+        
+{/* Categories */}
+<div className="mb-12">
+  {/* Mobile slider */}
+  <div className="md:hidden -mx-4 px-4">
+    <div
+      className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+      style={{ scrollbarWidth: "none" }}
+    >
+      <button
+        onClick={() => handleCategoryChange(null)}
+        className={`shrink-0 snap-start rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+          selectedCategory === null
+            ? "border-amber-500 bg-amber-500 text-[#17140f]"
+            : "border-stone-700 bg-[#211d17] text-stone-300"
+        }`}
+      >
+        Tous
+      </button>
 
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryChange(category.id)}
-              className={`rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
-                String(selectedCategory) === String(category.id)
-                  ? "border-amber-500 bg-amber-500 text-[#17140f]"
-                  : "border-stone-700 bg-[#211d17] text-stone-300 hover:border-amber-500 hover:text-amber-500"
-              }`}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
+      {categories.map((category) => (
+        <button
+          key={category.id}
+          onClick={() => handleCategoryChange(category.id)}
+          className={`shrink-0 snap-start rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+            String(selectedCategory) === String(category.id)
+              ? "border-amber-500 bg-amber-500 text-[#17140f]"
+              : "border-stone-700 bg-[#211d17] text-stone-300"
+          }`}
+        >
+          {category.name}
+        </button>
+      ))}
+    </div>
+
+    <p className="mt-1 text-center text-xs text-stone-500">
+      Faites glisser pour découvrir les catégories
+    </p>
+  </div>
+
+  {/* Desktop categories */}
+  <div className="hidden md:flex flex-wrap justify-center gap-3">
+    <button
+      onClick={() => handleCategoryChange(null)}
+      className={`rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+        selectedCategory === null
+          ? "border-amber-500 bg-amber-500 text-[#17140f]"
+          : "border-stone-700 bg-[#211d17] text-stone-300 hover:border-amber-500 hover:text-amber-500"
+      }`}
+    >
+      Tous
+    </button>
+
+    {categories.map((category) => (
+      <button
+        key={category.id}
+        onClick={() => handleCategoryChange(category.id)}
+        className={`rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+          String(selectedCategory) === String(category.id)
+            ? "border-amber-500 bg-amber-500 text-[#17140f]"
+            : "border-stone-700 bg-[#211d17] text-stone-300 hover:border-amber-500 hover:text-amber-500"
+        }`}
+      >
+        {category.name}
+      </button>
+    ))}
+  </div>
+</div>
+
 
         {/* Loading */}
         {loading && (
