@@ -12,17 +12,17 @@ import {
 
 // Replace these with your real contact details
 const CONTACT = {
-  instagram: "https://www.instagram.com/YOUR_USERNAME/",
-  facebook: "https://www.facebook.com/YOUR_PAGE/",
-  phone: "+216XXXXXXXX",
-  whatsapp: "216XXXXXXXX",
+  instagram: "https://www.instagram.com/dunesberbereszraoua?dlrf=MTJsc28xd3J6cmZjag==",
+  facebook: "https://www.facebook.com/share/1EBdW8DT8F/",
+  phone: "+21623165820",
+  whatsapp: "21623165820",
 };
 
 const socialLinks = [
   {
     name: "Instagram",
     description: "Découvrez nos photos et nos moments.",
-    username: "@YOUR_USERNAME",
+    username: "@Les Dunes Berbère",
     href: CONTACT.instagram,
     icon: Instagram,
   },
