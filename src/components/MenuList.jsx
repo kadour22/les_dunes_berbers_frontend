@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Coffee, Utensils, RefreshCw } from "lucide-react";
-
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const BASE_URL = "http://13.140.221.228:9000";
 
 const API = {
@@ -36,6 +37,7 @@ const getImageUrl = (image) => {
 };
 
 const MenuList = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -104,8 +106,21 @@ const MenuList = () => {
 
   return (
     <section className="min-h-screen bg-[#17140f] px-4 py-20 text-white sm:px-8">
+        
       <div className="mx-auto max-w-7xl">
-
+        {/* Go Back */}
+        <div className="mb-8 flex justify-center">
+          <button
+            onClick={() => navigate(-1)}
+            className="group inline-flex items-center gap-3 rounded-full border border-stone-700 bg-[#211d17] px-5 py-3 text-sm font-medium text-stone-300 transition-all duration-300 hover:border-amber-500 hover:bg-amber-500 hover:text-[#17140f]"
+          >
+            <ArrowLeft
+              size={18}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
+            Retour
+          </button>
+         </div>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}

@@ -1,20 +1,35 @@
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowDown,
   ArrowRight,
   MapPin,
   Utensils,
   Instagram,
+  Menu,
+  X,
 } from "lucide-react";
+
 import heroImage from "../assets/hero.jpg";
 import logo from "../assets/logo.png";
 import familie from "../assets/espace-familie.jpg";
 import coffeshop from "../assets/coffeshop.jpg";
+
 const Hero = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Accueil", href: "/" },
+    { label: "Notre menu", href: "/menu" },
+    { label: "Expérience", href: "#experience" },
+    { label: "Contact", href: "#contact" },
+  ];
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#17140f] text-white">
-
       {/* Background */}
       <div className="absolute inset-0">
         <img
@@ -31,20 +46,21 @@ const Hero = () => {
       <div className="absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-amber-600/10 blur-[120px]" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-6">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-5 sm:px-6">
 
         {/* Navbar */}
         <motion.nav
           initial={{ opacity: 0, y: -25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex items-center justify-between border-b border-white/15 py-6"
+          className="relative z-50 flex items-center justify-between border-b border-white/15 py-4 sm:py-6"
         >
-          <a href="/" className="flex items-center gap-3">
+          {/* Logo */}
+          <a href="/" onClick={closeMenu} className="flex items-center gap-3">
             <img
               src={logo}
               alt="Les Dunes Berbère"
-              className="h-14 w-14 rounded-full object-cover"
+              className="h-12 w-12 rounded-full object-cover sm:h-14 sm:w-14"
             />
             <div>
               <h2 className="font-serif text-lg tracking-wide">
@@ -56,20 +72,76 @@ const Hero = () => {
             </div>
           </a>
 
+          {/* Desktop navigation */}
           <div className="hidden items-center gap-9 text-sm text-white/80 md:flex">
-            <a href="/" className="transition hover:text-amber-400">Accueil</a>
-            <a href="/menu" className="transition hover:text-amber-400">Notre menu</a>
-            <a href="#experience" className="transition hover:text-amber-400">Expérience</a>
-            <a href="#contact" className="transition hover:text-amber-400">Contact</a>
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="transition hover:text-amber-400"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
+          {/* Desktop reservation */}
           <a
             href="/reservation"
-            className="hidden items-center gap-2 rounded-full border border-amber-400/70 px-6 py-3 text-sm font-medium text-amber-300 transition hover:bg-amber-400 hover:text-black sm:flex"
+            className="hidden items-center gap-2 rounded-full border border-amber-400/70 px-6 py-3 text-sm font-medium text-amber-300 transition hover:bg-amber-400 hover:text-black md:flex"
           >
             Réserver une table
             <ArrowRight size={16} />
           </a>
+
+          {/* Mobile menu button */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isMenuOpen}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-amber-400/40 bg-[#21190f]/80 text-amber-300 transition hover:bg-amber-400 hover:text-black md:hidden"
+          >
+            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+
+          {/* Mobile dropdown */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -12, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+                className="absolute left-0 right-0 top-full mt-3 overflow-hidden rounded-2xl border border-amber-400/20 bg-[#21190f]/95 p-5 shadow-2xl backdrop-blur-xl md:hidden"
+              >
+                <div className="flex flex-col">
+                  {navLinks.map((link, index) => (
+                    <motion.a
+                      key={link.label}
+                      href={link.href}
+                      onClick={closeMenu}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border-b border-white/10 py-4 text-sm text-white/80 transition hover:pl-2 hover:text-amber-400"
+                    >
+                      {link.label}
+                    </motion.a>
+                  ))}
+
+                  <a
+                    href="/reservation"
+                    onClick={closeMenu}
+                    className="mt-5 flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-4 text-sm font-semibold text-black transition hover:bg-amber-400"
+                  >
+                    Réserver une table
+                    <ArrowRight size={17} />
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.nav>
 
         {/* Hero body */}
@@ -77,7 +149,6 @@ const Hero = () => {
 
           {/* Left content */}
           <div className="max-w-2xl">
-
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -123,7 +194,7 @@ const Hero = () => {
             >
               <a
                 href="/menu"
-                className="group flex items-center gap-3 rounded-full bg-amber-500 px-8 py-4 font-semibold text-black transition hover:bg-amber-400"
+                className="group flex items-center gap-3 rounded-full bg-amber-500 px-6 py-4 text-sm font-semibold text-black transition hover:bg-amber-400 sm:px-8"
               >
                 Découvrir notre menu
                 <ArrowRight
@@ -134,7 +205,7 @@ const Hero = () => {
 
               <a
                 href="/reservation"
-                className="rounded-full border border-white/40 px-8 py-4 text-sm transition hover:border-amber-400 hover:text-amber-300"
+                className="rounded-full border border-white/40 px-6 py-4 text-sm transition hover:border-amber-400 hover:text-amber-300 sm:px-8"
               >
                 Réserver maintenant
               </a>
@@ -147,7 +218,7 @@ const Hero = () => {
               transition={{ delay: 1 }}
               className="mt-12 flex items-center gap-3 text-sm text-white/60"
             >
-              <MapPin size={17} className="text-amber-400" />
+              <MapPin size={17} className="shrink-0 text-amber-400" />
               <span>Un cadre exceptionnel, une expérience authentique.</span>
             </motion.div>
           </div>
@@ -159,7 +230,6 @@ const Hero = () => {
             transition={{ duration: 1, delay: 0.4 }}
             className="relative mx-auto hidden h-[490px] w-full max-w-[480px] lg:block"
           >
-            {/* Main image */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -173,7 +243,6 @@ const Hero = () => {
               <div className="absolute inset-0 bg-black/10" />
             </motion.div>
 
-            {/* Secondary image */}
             <div className="absolute bottom-0 left-0 h-56 w-64 overflow-hidden rounded-2xl border-4 border-[#17140f] shadow-2xl">
               <img
                 src={familie}
@@ -182,7 +251,6 @@ const Hero = () => {
               />
             </div>
 
-            {/* Floating badge */}
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 4, repeat: Infinity }}

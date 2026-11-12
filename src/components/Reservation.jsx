@@ -11,9 +11,10 @@ import {
   CheckCircle2,
   Coffee,
   RefreshCw,
+  ArrowLeft
 } from "lucide-react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const API_URL =
   "http://13.140.221.228:9000/reservations/reservations/create/";
 
@@ -65,6 +66,7 @@ const Reservation = () => {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (id) => (event) => {
     setForm((prev) => ({
@@ -184,7 +186,18 @@ const Reservation = () => {
       <div className="pointer-events-none absolute -right-20 -top-20 select-none font-serif text-[22rem] leading-none text-amber-500/[0.035]">
         ⵣ
       </div>
-
+        <div className="mb-8 flex justify-center">
+          <button
+            onClick={() => navigate(-1)}
+            className="group inline-flex items-center gap-3 rounded-full border border-stone-700 bg-[#211d17] px-5 py-3 text-sm font-medium text-stone-300 transition-all duration-300 hover:border-amber-500 hover:bg-amber-500 hover:text-[#17140f]"
+          >
+            <ArrowLeft
+              size={18}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
+            Retour
+          </button>
+         </div>
       <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-amber-600/[0.06] blur-[100px]" />
 
       <div className="relative mx-auto max-w-5xl">
