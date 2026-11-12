@@ -1,39 +1,22 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { User, Phone, Calendar, Clock, Users, Send, CheckCircle2 } from 'lucide-react'
-import axios from 'axios'
 
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  User,
+  Phone,
+  Calendar,
+  Clock,
+  Users,
+  Send,
+  CheckCircle2,
+  Coffee,
+  RefreshCw,
+} from "lucide-react";
+import axios from "axios";
 
-const fields = [
-  {
-    id: 'name',
-    label: 'Nom complet',
-    type: 'text',
-    icon: User,
-    placeholder: 'Votre nom',
-    autoComplete: 'name',
-  },
-  {
-    id: 'phone_number',
-    label: 'Numéro de téléphone',
-    type: 'tel',
-    icon: Phone,
-    placeholder: '+212 6 00 00 00 00',
-    autoComplete: 'tel',
-  },
-  {
-    id: 'date',
-    label: 'Date',
-    type: 'date',
-    icon: Calendar,
-  },
-  {
-    id: 'time',
-    label: 'Heure',
-    type: 'time',
-    icon: Clock,
-  },
-]
+const API_URL =
+  "http://13.140.221.228:9000/reservations/reservations/create/";
+
 const initialForm = {
   name: "",
   phone_number: "",
@@ -42,281 +25,459 @@ const initialForm = {
   number_of_guests: "",
 };
 
-export default function Reservation() {
+const fields = [
+  {
+    id: "name",
+    label: "Nom complet",
+    type: "text",
+    icon: User,
+    placeholder: "Votre nom complet",
+    autoComplete: "name",
+    fullWidth: true,
+  },
+  {
+    id: "phone_number",
+    label: "Téléphone",
+    type: "tel",
+    icon: Phone,
+    placeholder: "+216 XX XXX XXX",
+    autoComplete: "tel",
+  },
+  {
+    id: "date",
+    label: "Date",
+    type: "date",
+    icon: Calendar,
+  },
+  {
+    id: "time",
+    label: "Heure",
+    type: "time",
+    icon: Clock,
+  },
+];
+
+const inputStyle =
+  "w-full rounded-xl border bg-[#17140f] py-4 pl-12 pr-4 text-sm text-white outline-none transition-all placeholder:text-stone-600 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20";
+
+const Reservation = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (id) => (e) => {
+  const handleChange = (id) => (event) => {
     setForm((prev) => ({
       ...prev,
-      [id]: e.target.value,
+      [id]: event.target.value,
     }));
 
     setErrors((prev) => ({
       ...prev,
       [id]: undefined,
+      general: undefined,
     }));
   };
 
   const validate = () => {
-    const next = {};
+    const nextErrors = {};
 
     if (!form.name.trim()) {
-      next.name = "Veuillez indiquer votre nom.";
+      nextErrors.name = "Veuillez indiquer votre nom.";
     }
 
     if (!form.phone_number.trim()) {
-      next.phone_number = "Veuillez indiquer votre numéro de téléphone.";
+      nextErrors.phone_number =
+        "Veuillez indiquer votre numéro de téléphone.";
     } else if (!/^[\d\s+()-]{6,}$/.test(form.phone_number.trim())) {
-      next.phone_number = "Numéro de téléphone invalide.";
+      nextErrors.phone_number = "Numéro de téléphone invalide.";
     }
 
     if (!form.date) {
-      next.date = "Veuillez choisir une date.";
+      nextErrors.date = "Veuillez choisir une date.";
+    } else {
+      const selectedDate = new Date(`${form.date}T00:00:00`);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        nextErrors.date = "Veuillez choisir une date future.";
+      }
     }
 
     if (!form.time) {
-      next.time = "Veuillez choisir une heure.";
+      nextErrors.time = "Veuillez choisir une heure.";
     }
 
     if (!form.number_of_guests) {
-      next.number_of_guests = "Veuillez indiquer le nombre de convives.";
+      nextErrors.number_of_guests =
+        "Veuillez indiquer le nombre de convives.";
     } else if (Number(form.number_of_guests) < 1) {
-      next.number_of_guests = "Au moins 1 convive est requis.";
+      nextErrors.number_of_guests =
+        "Au moins un convive est requis.";
     }
 
-    return next;
+    return nextErrors;
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const validation = validate();
-  setErrors(validation);
+    const validationErrors = validate();
+    setErrors(validationErrors);
 
-  if (Object.keys(validation).length > 0) return;
+    if (Object.keys(validationErrors).length > 0) return;
 
-  try {
-    setSubmitting(true);
+    try {
+      setSubmitting(true);
 
-    const reservationData = {
-      name: form.name,
-      phone_number: form.phone_number,
-      date: form.date, // YYYY-MM-DD
-      time: form.time, // HH:MM
-      number_of_guests: Number(form.number_of_guests),
-    };
+      const reservationData = {
+        name: form.name.trim(),
+        phone_number: form.phone_number.trim(),
+        date: form.date,
+        time: form.time,
+        number_of_guests: Number(form.number_of_guests),
+      };
 
-    console.log("Sending:", reservationData);
+      await axios.post(API_URL, reservationData);
 
-    await axios.post(
-       "http://13.140.221.228:9000/reservations/reservations/create/",
-      reservationData
-    );
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Reservation error:", error.response?.data || error);
 
-    setSubmitted(true);
+      const responseData = error.response?.data;
 
-  } catch (error) {
-    console.error("Reservation error:", error.response?.data);
+      if (responseData && typeof responseData === "object") {
+        const backendErrors = {};
 
-    if (error.response?.data) {
-      setErrors(error.response.data);
-    } else {
-      setErrors({
-        general: "Une erreur est survenue. Veuillez réessayer.",
-      });
+        Object.entries(responseData).forEach(([key, value]) => {
+          backendErrors[key] = Array.isArray(value)
+            ? value.join(" ")
+            : typeof value === "string"
+              ? value
+              : "Veuillez vérifier cette information.";
+        });
+
+        setErrors(backendErrors);
+      } else {
+        setErrors({
+          general: "Une erreur est survenue. Veuillez réessayer.",
+        });
+      }
+    } finally {
+      setSubmitting(false);
     }
+  };
 
-  } finally {
-    setSubmitting(false);
-  }
-};
   const handleReset = () => {
     setForm(initialForm);
     setErrors({});
     setSubmitted(false);
   };
 
-
   return (
     <section
       id="reservation"
-      className="relative py-28 md:py-36 px-6 lg:px-10 bg-coffee/[0.03] overflow-hidden"
+      className="relative overflow-hidden bg-[#17140f] px-4 py-24 text-white sm:px-8 md:py-32"
     >
-      <span
-        aria-hidden="true"
-        className="absolute -right-16 -top-10 text-[18rem] leading-none font-heading text-coffee/[0.04] select-none"
-      >
+      {/* Decorative background */}
+      <div className="pointer-events-none absolute -right-20 -top-20 select-none font-serif text-[22rem] leading-none text-amber-500/[0.035]">
         ⵣ
-      </span>
+      </div>
 
-      <div className="max-w-3xl mx-auto relative">
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-amber-600/[0.06] blur-[100px]" />
+
+      <div className="relative mx-auto max-w-5xl">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-14"
+          className="mb-14 text-center"
         >
-          <span className="uppercase tracking-[0.3em] text-sand text-xs font-semibold">
-            Réservation
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-500">
+            <Coffee size={16} />
+            Les Dunes Berbère
           </span>
-          <h2 className="mt-4 font-heading text-4xl md:text-5xl text-coffee">
-            Réservez votre <span className="text-gradient-gold italic">table</span>
+
+          <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+            Réservez votre{" "}
+            <span className="italic text-amber-500">table</span>
           </h2>
-          <p className="mt-4 text-coffee/60 max-w-xl mx-auto leading-relaxed">
-            Offrez-vous un moment hors du temps. Remplissez le formulaire ci-dessous et notre
-            équipe confirmera votre réservation dans les plus brefs délais.
+
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-stone-400 sm:text-base">
+            Offrez-vous un moment hors du temps. Préparez votre visite
+            et laissez-nous prendre soin de votre expérience.
           </p>
+
+          <div className="mx-auto mt-7 h-1 w-16 rounded-full bg-amber-500" />
         </motion.div>
 
+        {/* Reservation Card */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="rounded-[2rem] bg-white shadow-card p-8 sm:p-12"
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8 }}
+          className="overflow-hidden rounded-3xl border border-stone-800 bg-[#211d17] shadow-2xl shadow-black/30"
         >
-          {submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center text-center py-10"
-              role="status"
-            >
-              <div className="w-16 h-16 rounded-full bg-gradient-gold flex items-center justify-center shadow-glow">
-                <CheckCircle2 className="w-8 h-8 text-coffee" strokeWidth={1.5} />
-              </div>
-              <h3 className="mt-6 font-heading text-2xl text-coffee">
-                Réservation confirmée !
-              </h3>
-              <p className="mt-2 text-coffee/60 max-w-sm">
-                Merci, {form.name.split(' ')[0]}. Nous vous attendons le{' '}
-                {new Date(form.date).toLocaleDateString('fr-FR', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })}{' '}
-                à {form.time} pour {form.number_of_guests}{' '}
-                {Number(form.number_of_guests) > 1 ? 'personnes' : 'personne'}.
-              </p>
-              <button
-                onClick={handleReset}
-                className="mt-8 inline-flex items-center gap-2 px-7 py-3 rounded-full border border-coffee/15 text-coffee text-sm font-semibold uppercase tracking-wide hover:bg-coffee/5 transition-colors"
-              >
-                Nouvelle réservation
-              </button>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} noValidate className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
-                {fields.map(({ id, label, type, icon: Icon, placeholder, autoComplete }) => (
-                  <div key={id} className={id === 'name' ? 'sm:col-span-2' : ''}>
-                    <label
-                      htmlFor={id}
-                      className="block text-xs uppercase tracking-wide font-semibold text-coffee/60 mb-2"
-                    >
-                      {label}
-                    </label>
-                    <div className="relative">
-                      <Icon
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-sand pointer-events-none"
-                        aria-hidden="true"
-                      />
-                      <input
-                        id={id}
-                        name={id}
-                        type={type}
-                        value={form[id]}
-                        onChange={handleChange(id)}
-                        placeholder={placeholder}
-                        autoComplete={autoComplete}
-                        aria-invalid={Boolean(errors[id])}
-                        aria-describedby={errors[id] ? `${id}-error` : undefined}
-                        className={`w-full pl-11 pr-4 py-3.5 rounded-xl bg-background border text-sm text-coffee placeholder:text-coffee/30 focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all ${
-                          errors[id] ? 'border-red-400' : 'border-coffee/10 focus:border-gold'
-                        }`}
-                      />
-                    </div>
-                    {errors[id] && (
-                      <p id={`${id}-error`} className="mt-1.5 text-xs text-red-500">
-                        {errors[id]}
-                      </p>
-                    )}
-                  </div>
-                ))}
+          {/* Card top decoration */}
+          <div className="h-1.5 w-full bg-gradient-to-r from-amber-800 via-amber-400 to-amber-800" />
 
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="number_of_guests"
-                    className="block text-xs uppercase tracking-wide font-semibold text-coffee/60 mb-2"
-                  >
-                    Nombre de convives
-                  </label>
-                  <div className="relative">
-                    <Users
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-sand pointer-events-none"
-                      aria-hidden="true"
-                    />
-                    <select
-                      id="number_of_guests"
-                      name="number_of_guests"
-                      value={form.number_of_guests}
-                      onChange={handleChange('number_of_guests')}
-                      aria-invalid={Boolean(errors.number_of_guests)}
-                      aria-describedby={
-                        errors.number_of_guests ? 'number_of_guests-error' : undefined
-                      }
-                      className={`w-full appearance-none pl-11 pr-4 py-3.5 rounded-xl bg-background border text-sm text-coffee focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all ${
-                        errors.number_of_guests
-                          ? 'border-red-400'
-                          : 'border-coffee/10 focus:border-gold'
-                      }`}
-                    >
-                      <option value="" disabled>
-                        Choisissez le nombre de convives
-                      </option>
-                      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                        <option key={n} value={n}>
-                          {n} {n > 1 ? 'personnes' : 'personne'}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.number_of_guests && (
-                    <p id="number_of_guests-error" className="mt-1.5 text-xs text-red-500">
-                      {errors.number_of_guests}
-                    </p>
-                  )}
+          <div className="p-6 sm:p-10 md:p-14">
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center py-12 text-center"
+                role="status"
+              >
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10">
+                  <CheckCircle2
+                    size={40}
+                    className="text-amber-500"
+                    strokeWidth={1.5}
+                  />
                 </div>
-              </div>
 
-              <motion.button
-                type="submit"
-                disabled={submitting}
-                whileHover={{ scale: submitting ? 1 : 1.02 }}
-                whileTap={{ scale: submitting ? 1 : 0.98 }}
-                className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-gold text-coffee font-semibold text-sm tracking-wide shadow-glow disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
-              >
-                {submitting ? (
-                  <>
-                    <span className="w-4 h-4 rounded-full border-2 border-coffee/40 border-t-coffee animate-spin" />
-                    Envoi en cours...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    Confirmer la réservation
-                  </>
+                <h3 className="mt-7 font-serif text-3xl font-bold">
+                  Demande envoyée !
+                </h3>
+
+                <p className="mt-4 max-w-md text-sm leading-7 text-stone-400">
+                  Merci {form.name.split(" ")[0]} ! Votre demande de
+                  réservation a bien été reçue. Notre équipe vous
+                  contactera pour confirmer votre table.
+                </p>
+
+                <div className="mt-8 rounded-2xl border border-stone-700 bg-[#17140f] p-6 text-left">
+                  <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-amber-500">
+                    Votre réservation
+                  </p>
+
+                  <div className="space-y-3 text-sm text-stone-300">
+                    <p className="flex items-center gap-3">
+                      <Calendar size={16} className="text-amber-500" />
+                      {new Date(`${form.date}T00:00:00`).toLocaleDateString(
+                        "fr-FR",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }
+                      )}
+                    </p>
+
+                    <p className="flex items-center gap-3">
+                      <Clock size={16} className="text-amber-500" />
+                      {form.time}
+                    </p>
+
+                    <p className="flex items-center gap-3">
+                      <Users size={16} className="text-amber-500" />
+                      {form.number_of_guests}{" "}
+                      {Number(form.number_of_guests) > 1
+                        ? "personnes"
+                        : "personne"}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleReset}
+                  className="mt-9 inline-flex items-center gap-2 rounded-full border border-amber-500/40 px-7 py-3 text-sm font-semibold text-amber-400 transition hover:bg-amber-500 hover:text-[#17140f]"
+                >
+                  <RefreshCw size={16} />
+                  Nouvelle réservation
+                </button>
+              </motion.div>
+            ) : (
+              <>
+                <div className="mb-9">
+                  <h3 className="font-serif text-2xl font-semibold">
+                    Vos informations
+                  </h3>
+
+                  <p className="mt-2 text-sm text-stone-500">
+                    Remplissez les informations ci-dessous pour réserver.
+                  </p>
+                </div>
+
+                {errors.general && (
+                  <div
+                    role="alert"
+                    className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+                  >
+                    {errors.general}
+                  </div>
                 )}
-              </motion.button>
-            </form>
-          )}
+
+                <form
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className="space-y-7"
+                >
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {fields.map(
+                      ({
+                        id,
+                        label,
+                        type,
+                        icon: Icon,
+                        placeholder,
+                        autoComplete,
+                        fullWidth,
+                      }) => (
+                        <div
+                          key={id}
+                          className={fullWidth ? "sm:col-span-2" : ""}
+                        >
+                          <label
+                            htmlFor={id}
+                            className="mb-3 block text-xs font-semibold uppercase tracking-wider text-stone-400"
+                          >
+                            {label}
+                          </label>
+
+                          <div className="relative">
+                            <Icon
+                              size={17}
+                              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-amber-500"
+                            />
+
+                            <input
+                              id={id}
+                              name={id}
+                              type={type}
+                              value={form[id]}
+                              onChange={handleChange(id)}
+                              placeholder={placeholder}
+                              autoComplete={autoComplete}
+                              aria-invalid={Boolean(errors[id])}
+                              aria-describedby={
+                                errors[id] ? `${id}-error` : undefined
+                              }
+                              className={`${inputStyle} ${
+                                errors[id]
+                                  ? "border-red-500"
+                                  : "border-stone-700 hover:border-stone-600"
+                              }`}
+                            />
+                          </div>
+
+                          {errors[id] && (
+                            <p
+                              id={`${id}-error`}
+                              className="mt-2 text-xs text-red-400"
+                            >
+                              {errors[id]}
+                            </p>
+                          )}
+                        </div>
+                      )
+                    )}
+
+                    {/* Number of guests */}
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="number_of_guests"
+                        className="mb-3 block text-xs font-semibold uppercase tracking-wider text-stone-400"
+                      >
+                        Nombre de convives
+                      </label>
+
+                      <div className="relative">
+                        <Users
+                          size={17}
+                          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-amber-500"
+                        />
+
+                        <select
+                          id="number_of_guests"
+                          name="number_of_guests"
+                          value={form.number_of_guests}
+                          onChange={handleChange("number_of_guests")}
+                          aria-invalid={Boolean(errors.number_of_guests)}
+                          aria-describedby={
+                            errors.number_of_guests
+                              ? "number_of_guests-error"
+                              : undefined
+                          }
+                          className={`${inputStyle} appearance-none ${
+                            errors.number_of_guests
+                              ? "border-red-500"
+                              : "border-stone-700 hover:border-stone-600"
+                          } ${
+                            !form.number_of_guests ? "text-stone-500" : ""
+                          }`}
+                        >
+                          <option value="" disabled>
+                            Choisissez le nombre de convives
+                          </option>
+
+                          {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                            (number) => (
+                              <option
+                                key={number}
+                                value={number}
+                                className="bg-[#211d17] text-white"
+                              >
+                                {number}{" "}
+                                {number > 1 ? "personnes" : "personne"}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+
+                      {errors.number_of_guests && (
+                        <p
+                          id="number_of_guests-error"
+                          className="mt-2 text-xs text-red-400"
+                        >
+                          {errors.number_of_guests}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Submit */}
+                  <div className="border-t border-stone-800 pt-7">
+                    <motion.button
+                      type="submit"
+                      disabled={submitting}
+                      whileHover={{ scale: submitting ? 1 : 1.015 }}
+                      whileTap={{ scale: submitting ? 1 : 0.98 }}
+                      className="flex w-full items-center justify-center gap-3 rounded-full bg-amber-500 px-8 py-4 text-sm font-bold tracking-wide text-[#17140f] shadow-lg shadow-amber-900/20 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {submitting ? (
+                        <>
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#17140f]/30 border-t-[#17140f]" />
+                          Envoi en cours...
+                        </>
+                      ) : (
+                        <>
+                          <Send size={17} />
+                          Confirmer la réservation
+                        </>
+                      )}
+                    </motion.button>
+
+                    <p className="mt-4 text-center text-xs leading-6 text-stone-500">
+                      Notre équipe vous contactera pour confirmer
+                      votre réservation.
+                    </p>
+                  </div>
+                </form>
+              </>
+            )}
+          </div>
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
+
+export default Reservation;
