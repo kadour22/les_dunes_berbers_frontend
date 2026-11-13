@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import {
   Instagram,
@@ -10,7 +9,6 @@ import {
   Heart,
 } from "lucide-react";
 
-// Replace these with your real contact details
 const CONTACT = {
   instagram: "https://www.instagram.com/dunesberbereszraoua?dlrf=MTJsc28xd3J6cmZjag==",
   facebook: "https://www.facebook.com/share/1EBdW8DT8F/",

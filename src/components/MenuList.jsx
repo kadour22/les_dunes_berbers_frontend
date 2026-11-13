@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Coffee, Utensils, RefreshCw } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = "http://13.140.221.228:9000";
+const BASE_URL = "https://api.lesdunesberberes.com";
 
 const API = {
   categories: `${BASE_URL}/menu/categories/`,

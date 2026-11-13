@@ -16,7 +16,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const API_URL =
-  "http://13.140.221.228:9000/reservations/reservations/create/";
+  "https://api.lesdunesberberes.com/reservations/reservations/create/";
 
 const initialForm = {
   name: "",
